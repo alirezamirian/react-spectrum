@@ -2071,18 +2071,23 @@ describe('usePress', function () {
     it('should handle when focus moves between keydown and keyup', function () {
       let events = [];
       let addEvent = (e) => events.push(e);
-      let {getByText} = render(
-        <Example
-          onPressStart={addEvent}
-          onPressEnd={addEvent}
-          onPressChange={pressed => addEvent({type: 'presschange', pressed})}
-          onPress={addEvent}
-          onPressUp={addEvent} />
+      let {getByText, getByTestId} = render(
+        <>
+          <input data-testid="input" />
+          <Example
+            onPressStart={addEvent}
+            onPressEnd={addEvent}
+            onPressChange={(pressed) =>
+              addEvent({type: 'presschange', pressed})
+            }
+            onPress={addEvent}
+            onPressUp={addEvent} />
+        </>
       );
 
       let el = getByText('test');
       fireEvent.keyDown(el, {key: ' '});
-      fireEvent.keyUp(document.body, {key: ' '});
+      fireEvent.keyUp(getByTestId('input'), {key: ' '});
 
       fireEvent.keyDown(el, {key: ' '});
       fireEvent.keyUp(el, {key: ' '});
